@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeCircle — Women's Safety & Civic Accountability Ecosystem</title>
+  <meta name="description" content="Production-ready prototype for SafeCircle: Wearable IoT SOS, Mobile Stealth Client, Cryptographic Anonymity Shield, DigiLocker, and Public Civic Accountability Tally.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body class="theme-dark">
+
+  <!-- Ecosystem Top Nav -->
+  <header class="ecosystem-header">
+    <div class="brand-group">
+      <div class="brand-glyph">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 3v6m0 6v6M3 12h6m6 0h6"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-name">SAFECIRCLE</h1>
+        <span class="brand-tagline">Women's Safety & Civic Accountability Architecture</span>
+      </div>
+    </div>
+
+    <!-- View Modes Switcher -->
+    <nav class="view-switcher" id="viewSwitcher">
+      <button class="nav-tab active" data-view="split" id="tab-split">
+        <span class="tab-icon">🔲</span> Multi-View Ecosystem
+      </button>
+      <button class="nav-tab" data-view="mobile" id="tab-mobile">
+        <span class="tab-icon">📱</span> Mobile Companion
+      </button>
+      <button class="nav-tab" data-view="iot" id="tab-iot">
+        <span class="tab-icon">💍</span> Wearable IoT Ring
+      </button>
+      <button class="nav-tab" data-view="tracker" id="tab-tracker">
+        <span class="tab-icon">📡</span> Live GPS Tracker (<span id="tokenMiniBadge">tk-8942</span>)
+      </button>
+      <button class="nav-tab" data-view="civic" id="tab-civic">
+        <span class="tab-icon">🏛️</span> Civic Accountability Tally
+      </button>
+      <button class="nav-tab" data-view="ai-legal" id="tab-ai-legal">
+        <span class="tab-icon">⚖️</span> AI Legal & Victim Shield
+      </button>
+    </nav>
+
+    <!-- Global Threat & BLE Indicator -->
+    <div class="header-status-strip">
+      <div class="ble-pill" id="blePill">
+        <span class="pulse-dot"></span>
+        <span id="blePillText">BLE Ring S3 Connected (94%)</span>
+      </div>
+      <div class="threat-status-badge status-idle" id="threatBadge">
+        <span id="threatBadgeText">STATUS: ARMED & SECURE</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Ecosystem Main Stage -->
+  <main class="ecosystem-stage" id="ecosystemStage">
+
+    <!-- ============================================== -->
+    <!-- PANEL 1: MOBILE COMPANION APP (Phone Mockup) -->
+    <!-- ============================================== -->
+    <section class="stage-card stage-card-mobile" id="panel-mobile">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="device-tag">MOBILE CLIENT</span>
+          <h2>SafeCircle Mobile App</h2>
+        </div>
+        <div class="device-actions">
+          <button class="pill-btn stealth-toggle-btn" id="btnQuickStealth" title="Toggle Calculator Disguise">
+            🧮 Stealth Disguise
+          </button>
+        </div>
+      </div>
+
+      <!-- Smartphone Bezel Mockup -->
+      <div class="phone-frame-wrapper">
+        <div class="phone-frame">
+          <div class="phone-speaker-notch"></div>
+          
+          <!-- Screen 1A: Main App Screen -->
+          <div class="phone-screen active-screen" id="phoneAppScreen">
+            <!-- Mobile App Internal Header -->
+            <div class="app-inner-header">
+              <div class="app-brand">
+                <span class="app-logo-text">SAFECIRCLE</span>
+                <span class="shield-verified-mini">🛡️ Verified Citizen #8942</span>
+              </div>
+              <button class="app-icon-btn" id="btnAppStealth" title="Stealth Mode">🧮</button>
+            </div>
+
+            <!-- Covert Duress Indicator (Only shown if duress PIN was entered, to demonstrate to evaluator) -->
+            <div class="covert-duress-banner hidden" id="covertDuressBanner">
+              ⚠️ DURESS SILENT ALERT: Assailant sees safe screen, live GPS is secretly broadcasting!
+            </div>
+
+            <!-- Main App Content Container -->
+            <div class="app-body-scroll" id="appBodyScroll">
+
+              <!-- Normal Armed State View -->
+              <div class="armed-view-container" id="armedView">
+                <div class="sos-prompt-header">
+                  <h3 class="trigger-headline" id="triggerHeadline">5-SECOND CONTINUOUS PRESS</h3>
+                  <p class="trigger-subtext" id="triggerSubtext">
+                    Hold the button below or your Smart Ring for 5s. Includes 1s cancel window to eliminate false positives.
+                  </p>
+                </div>
+
+                <!-- 5-Second Circular Trigger Button -->
+                <div class="sos-button-anchor">
+                  <div class="circular-progress-wrap" id="circularProgressWrap">
+                    <svg class="progress-ring-svg" viewBox="0 0 200 200">
+                      <circle class="ring-bg" cx="100" cy="100" r="90" />
+                      <circle class="ring-progress" id="ringProgressCircle" cx="100" cy="100" r="90" />
+                    </svg>
+                    
+                    <button class="sos-interactive-btn" id="sosMainBtn" aria-label="Hold for SOS">
+                      <span class="sos-core-label" id="sosCoreLabel">SOS</span>
+                      <span class="sos-ms-counter" id="sosCounter">HOLD 5s</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 1-Second Grace Window Cancel Banner (Dynamically shown during grace window) -->
+                <div class="grace-window-banner hidden" id="graceWindowBanner">
+                  <div class="grace-counter-pulse">1.0s CANCEL WINDOW</div>
+                  <button class="abort-grace-btn" id="btnAbortGrace">TAP TO ABORT SOS (FALSE ALARM)</button>
+                </div>
+
+                <!-- App Feature Quick Hub -->
+                <div class="app-feature-hub">
+                  <div class="feature-tile" id="tileLocker">
+                    <span class="tile-icon">🔐</span>
+                    <span class="tile-title">DigiLocker</span>
+                    <span class="tile-status">4 Encrypted Files</span>
+                  </div>
+                  <div class="feature-tile" id="tileKYC">
+                    <span class="tile-icon">🪪</span>
+                    <span class="tile-title">Verified ID</span>
+                    <span class="tile-status">Voter/PAN Sealed</span>
+                  </div>
+                  <div class="feature-tile" id="tileCivic">
+                    <span class="tile-icon">📊</span>
+                    <span class="tile-title">Civic Tally</span>
+                    <span class="tile-status">Delhi NCR (80.9%)</span>
+                  </div>
+                  <div class="feature-tile" id="tileLegal">
+                    <span class="tile-icon">⚖️</span>
+                    <span class="tile-title">AI Legal Shield</span>
+                    <span class="tile-status">Rights & Victim Help</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Active Emergency SOS State View (Locked In) -->
+              <div class="emergency-active-view hidden" id="emergencyActiveView">
+                <div class="emergency-alert-pulse">
+                  <span class="emergency-icon-flash">🚨</span>
+                  <h3>EMERGENCY SOS BROADCASTING</h3>
+                  <p>High-priority telemetry dispatched to Trusted Contacts & 112 PCR Command.</p>
+                </div>
+
+                <!-- Captured Evidence Snapshot Widget -->
+                <div class="evidence-snapshot-box" id="evidenceSnapshotBox">
+                  <div class="snapshot-header">
+                    <span>📷 AUTO-CAPTURED COVERT EVIDENCE</span>
+                    <span class="timestamp-badge" id="snapshotTimestamp">21:58:12 IST</span>
+                  </div>
+                  <div class="snapshot-preview">
+                    <div class="cam-view-sim">
+                      <span class="rec-dot"></span> REC (Front Cam + Mic Buffer Encrypted)
+                      <div class="cam-lens-grid"></div>
+                      <span class="watermark-gps" id="camGpsWatermark">28.6139° N, 77.2090° E | Speed: 18km/h</span>
+                    </div>
+                  </div>
+                  <span class="evidence-sha" id="evidenceSha">SHA256: 8e84f5010b4293f06488d5e8ff745d...</span>
+                </div>
+
+                <!-- Live Tracking Link Card -->
+                <div class="tracking-link-card">
+                  <span class="link-label">SECURE LIVE TRACKER LINK (NO LOGIN REQUIRED):</span>
+                  <div class="link-box">
+                    <span class="link-url" id="liveTrackingUrl">app.safecircle.id/track/tk-8942</span>
+                    <button class="copy-url-btn" id="btnCopyUrl" title="Copy tracking link">Copy</button>
+                  </div>
+                  <span class="link-notice">Coordinates update every 3s via WebSockets.</span>
+                </div>
+
+                <!-- Threat Controls -->
+                <div class="threat-action-row">
+                  <button class="threat-btn siren-btn active" id="btnToggleSiren">
+                    <span id="sirenBtnIcon">🔊</span> <span id="sirenBtnText">Siren: 110dB Active</span>
+                  </button>
+                  <button class="threat-btn strobe-btn active" id="btnToggleStrobe">
+                    ⚡ Strobe Light: ON
+                  </button>
+                </div>
+
+                <!-- Disarm Trigger -->
+                <button class="disarm-prompt-btn" id="btnOpenDisarmModal">
+                  🔓 ENTER SECURITY PIN TO DISARM
+                </button>
+              </div>
+
+            </div>
+
+            <!-- In-App DigiLocker Sub-view (Modal Overlay) -->
+            <div class="in-app-overlay hidden" id="lockerOverlay">
+              <div class="overlay-header">
+                <h3>📁 SECURE DIGITAL LOCKER</h3>
+                <button class="close-overlay-btn" id="btnCloseLocker">✕</button>
+              </div>
+              <div class="overlay-crypto-tag">AES-256-GCM Client-Side Encrypted Vault</div>
+              <div class="overlay-body">
+                <div class="locker-item" data-id="DOC-901">
+                  <div class="item-icon">🪪</div>
+                  <div class="item-meta">
+                    <span class="item-name">VOTER_ID_EPIC_CARD.PDF</span>
+                    <span class="item-hash">SHA256: 8e84f501...623e</span>
+                  </div>
+                  <button class="attach-btn" data-doc="DOC-901">Attach</button>
+                </div>
+                <div class="locker-item" data-id="DOC-902">
+                  <div class="item-icon">🎙️</div>
+                  <div class="item-meta">
+                    <span class="item-name">CAB_COVERT_AUDIO_RECORDING.M4A</span>
+                    <span class="item-hash">SHA256: 1c496f83...3b34</span>
+                  </div>
+                  <button class="attach-btn attached" data-doc="DOC-902">✓ Attached</button>
+                </div>
+                <div class="locker-item" data-id="DOC-903">
+                  <div class="item-icon">📷</div>
+                  <div class="item-meta">
+                    <span class="item-name">VEHICLE_LICENSE_PLATE_DL1VC.JPG</span>
+                    <span class="item-hash">SHA256: 3b0928f1...3da1</span>
+                  </div>
+                  <button class="attach-btn attached" data-doc="DOC-903">✓ Attached</button>
+                </div>
+                <div class="locker-item" data-id="DOC-904">
+                  <div class="item-icon">🏥</div>
+                  <div class="item-meta">
+                    <span class="item-name">FORENSIC_MEDICAL_REPORT.PDF</span>
+                    <span class="item-hash">SHA256: f50183b2...60e3</span>
+                  </div>
+                  <button class="attach-btn" data-doc="DOC-904">Attach</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- In-App KYC Sub-view (Modal Overlay) -->
+            <div class="in-app-overlay hidden" id="kycOverlay">
+              <div class="overlay-header">
+                <h3>🪪 CITIZEN KYC & ANONYMITY SHIELD</h3>
+                <button class="close-overlay-btn" id="btnCloseKyc">✕</button>
+              </div>
+              <div class="overlay-body">
+                <div class="kyc-badge-display">
+                  <span class="shield-icon">🛡️</span>
+                  <div>
+                    <span class="badge-label">PUBLIC CRYPTOGRAPHIC HANDLE:</span>
+                    <h4 class="verified-handle-txt" id="kycVerifiedHandleDisplay">Verified Citizen #8942</h4>
+                  </div>
+                </div>
+                <div class="kyc-input-group">
+                  <label>Document Type:</label>
+                  <select id="kycDocTypeSelect" class="styled-select">
+                    <option value="VOTER_ID">Voter ID (EPIC Card)</option>
+                    <option value="PAN_CARD">Income Tax PAN Card</option>
+                  </select>
+                </div>
+                <div class="kyc-input-group">
+                  <label>Document Number:</label>
+                  <input type="text" id="kycDocNumber" class="styled-input" value="WB/12/084/291842">
+                </div>
+                <div class="kyc-input-group">
+                  <label>Full Legal Name:</label>
+                  <input type="text" id="kycFullName" class="styled-input" value="Ananya Sharma">
+                </div>
+                <button class="run-ocr-btn" id="btnRunOcrKyc">⚡ RUN AUTOMATED OCR VERIFICATION</button>
+                
+                <div class="dual-key-info-box">
+                  <strong>⚖️ Dual-Key Multi-Admin Legal Escrow:</strong>
+                  <p>Your real name is stored in an encrypted vault. Police cannot view it without simultaneous judicial magistrate + state oversight keys.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- In-App AI Legal & Victim Shield Sub-view (Modal Overlay) -->
+            <div class="in-app-overlay hidden" id="legalOverlay">
+              <div class="overlay-header">
+                <h3>⚖️ AI LEGAL & VICTIM SHIELD</h3>
+                <button class="close-overlay-btn" id="btnCloseLegal">✕</button>
+              </div>
+              <div class="overlay-crypto-tag">Constitutional Rights, BNS/IPC Legal AI & Victim Triage</div>
+              <div class="overlay-body">
+                <!-- Mobile Urgent Victim Banner -->
+                <div class="mobile-urgent-victim-banner">
+                  <div class="banner-badge">🆘 VICTIM ASSIST</div>
+                  <strong>Need Emergency Help Right Now?</strong>
+                  <p>Preserve DNA evidence • Free hospital care under Sec 357C • Zero FIR at any police station.</p>
+                  <button class="mobile-sos-trigger-btn" id="btnMobileVictimSos">🚨 Trigger Emergency SOS</button>
+                </div>
+                
+                <!-- Quick Mobile Legal Prompts -->
+                <div class="mobile-prompt-chips">
+                  <button class="m-chip urgent" data-prompt="I need help right now — I was assaulted">🆘 I Need Help Now</button>
+                  <button class="m-chip" data-prompt="What does Article 21 say about bodily dignity?">🏛️ Article 21 Dignity</button>
+                  <button class="m-chip" data-prompt="What is penalty for rape under BNS 64 vs IPC 376?">⚖️ BNS 64 Rape Law</button>
+                  <button class="m-chip" data-prompt="Can police refuse to file my Zero FIR?">🚔 Zero FIR Rules</button>
+                </div>
+
+                <!-- Mobile Chat Display -->
+                <div class="mobile-chat-box" id="mobileLegalChatBox">
+                  <div class="m-msg ai">
+                    <div class="m-msg-header">🤖 SAFECIRCLE AI LEGAL ADVOCATE</div>
+                    <div class="m-msg-body">Namaste. I clarify the Constitution of India (Articles 14, 15, 21, 39A), anti-rape laws (BNS 64 / IPC 376), Zero FIR mandates, and provide immediate trauma-informed steps if you or someone you know has been assaulted. Tap a prompt above or type below.</div>
+                  </div>
+                </div>
+
+                <!-- Mobile Chat Input -->
+                <div class="mobile-chat-input-row">
+                  <input type="text" id="mobileLegalInput" placeholder="Ask on Constitution, Zero FIR, or get help..." class="styled-input">
+                  <button class="mobile-send-btn" id="btnMobileSendLegal">➤</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Disarm PIN Modal (Safe vs Duress PIN) -->
+            <div class="pin-modal-overlay hidden" id="pinModal">
+              <div class="pin-modal-card">
+                <h3>ENTER 4-DIGIT PIN</h3>
+                <p class="pin-tip">
+                  Safe PIN: <strong class="code-pill">1234</strong> (Safe Disarm)<br>
+                  Duress PIN: <strong class="code-pill">4321</strong> / <strong class="code-pill">9999</strong> (Fake Disarm)
+                </p>
+                <div class="pin-display-row" id="pinDisplayRow">
+                  <span class="pin-dot"></span>
+                  <span class="pin-dot"></span>
+                  <span class="pin-dot"></span>
+                  <span class="pin-dot"></span>
+                </div>
+                <div class="pin-numpad">
+                  <button class="num-key" data-digit="1">1</button>
+                  <button class="num-key" data-digit="2">2</button>
+                  <button class="num-key" data-digit="3">3</button>
+                  <button class="num-key" data-digit="4">4</button>
+                  <button class="num-key" data-digit="5">5</button>
+                  <button class="num-key" data-digit="6">6</button>
+                  <button class="num-key" data-digit="7">7</button>
+                  <button class="num-key" data-digit="8">8</button>
+                  <button class="num-key" data-digit="9">9</button>
+                  <button class="num-key fn-key" id="btnPinClear">C</button>
+                  <button class="num-key" data-digit="0">0</button>
+                  <button class="num-key fn-key" id="btnPinClose">✕</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Screen 1B: Stealth Disguise Screen (Functional Calculator) -->
+          <div class="phone-screen disguised-screen" id="phoneCalculatorScreen">
+            <div class="calc-top-bar">
+              <span class="calc-covert-dot" id="calcCovertDot"></span>
+              <span class="calc-brand">STANDARD CALCULATOR</span>
+            </div>
+            <div class="calc-lcd">
+              <div class="calc-history" id="calcHistory"></div>
+              <div class="calc-display" id="calcDisplay">0</div>
+            </div>
+            <div class="calc-grid">
+              <button class="cbtn meta" data-calc="AC">AC</button>
+              <button class="cbtn meta" data-calc="NEG">±</button>
+              <button class="cbtn meta" data-calc="PCT">%</button>
+              <button class="cbtn op" data-calc="DIV">÷</button>
+
+              <button class="cbtn num" data-calc="7">7</button>
+              <button class="cbtn num" data-calc="8">8</button>
+              <button class="cbtn num" data-calc="9">9</button>
+              <button class="cbtn op" data-calc="MUL">×</button>
+
+              <button class="cbtn num" data-calc="4">4</button>
+              <button class="cbtn num" data-calc="5">5</button>
+              <button class="cbtn num" data-calc="6">6</button>
+              <button class="cbtn op" data-calc="SUB">−</button>
+
+              <button class="cbtn num" data-calc="1">1</button>
+              <button class="cbtn num" data-calc="2">2</button>
+              <button class="cbtn num" data-calc="3">3</button>
+              <button class="cbtn op" data-calc="ADD">+</button>
+
+              <button class="cbtn num zero" data-calc="0">0</button>
+              <button class="cbtn num" data-calc="DOT">.</button>
+              <button class="cbtn op equals" data-calc="EQ" id="calcEqualsBtn">=</button>
+            </div>
+            <div class="calc-secret-hints">
+              <span>Secret Safe Uncloak: <strong>1234=</strong></span>
+              <span>Secret Covert SOS: <strong>9999=</strong> or hold <strong>=</strong></span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- PANEL 2: WEARABLE IOT HARDWARE SIMULATOR       -->
+    <!-- ============================================== -->
+    <section class="stage-card stage-card-iot" id="panel-iot">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="device-tag">IOT HARDWARE</span>
+          <h2>SafeCircle Smart Ring S3</h2>
+        </div>
+        <div class="device-actions">
+          <span class="battery-chip" id="iotBatteryBadge">🔋 94% LiPo</span>
+        </div>
+      </div>
+
+      <div class="iot-interactive-container">
+        <!-- Physical Device Visualizer -->
+        <div class="ring-hardware-stage">
+          <div class="ring-photo-holder">
+            <img src="ring.jpg" alt="SafeCircle Smart Ring S3" class="ring-photo-img" id="ringPhoto">
+            <div class="haptic-ring-wave" id="hapticWave"></div>
+            <!-- Interactive Touch Zone representing the tactile sub-surface micro-switch -->
+            <button class="ring-tactile-sensor" id="ringTactileBtn" aria-label="Ring Physical Sensor Button">
+              <span class="sensor-icon">⚡</span>
+              <span class="sensor-label">TACTILE SWITCH</span>
+            </button>
+          </div>
+          <div class="ring-prompt-caption">
+            <strong>Physical 5-Second Debounce:</strong> Press and hold the tactile ring switch above to trigger SOS directly from the wearable hardware.
+          </div>
+        </div>
+
+        <!-- BLE GATT Characteristic Telemetry Console -->
+        <div class="ble-telemetry-console">
+          <div class="console-head">
+            <span>BLE 5.2 GATT TELEMETRY STREAM</span>
+            <span class="chip-live">LIVE</span>
+          </div>
+          <div class="console-body" id="gattLogs">
+            <div class="log-entry info">[GATT INIT] Service UUID: 0000FD00-0000-1000-8000-00805F9B34FB</div>
+            <div class="log-entry">[0xFD02] Battery Telemetry: 94% (4.14V) | Temp: 31.4°C</div>
+            <div class="log-entry">[0xFD01] Trigger Characteristic: 0x00 (IDLE_ARMED)</div>
+            <div class="log-entry success">[BLE CONNECT] Paired to Mobile Client (RSSI: -58dBm)</div>
+          </div>
+          <div class="firmware-specs">
+            <span>Firmware: <strong>SC-S3-v2.4.1</strong></span>
+            <span>Sleep Current: <strong>&lt;14µA</strong></span>
+            <span>Standby: <strong>7.2 Days</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- PANEL 3: LIVE EMERGENCY GPS TRACKER VIEW       -->
+    <!-- ============================================== -->
+    <section class="stage-card stage-card-tracker" id="panel-tracker">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="device-tag">PUBLIC RESCUE VIEWER</span>
+          <h2>Live Emergency GPS Tracker</h2>
+        </div>
+        <div class="device-actions">
+          <span class="no-login-badge">🔓 Zero-Login Public Token Access</span>
+        </div>
+      </div>
+
+      <!-- Live Map Simulation Canvas -->
+      <div class="live-map-container">
+        <div class="map-overlay-header">
+          <div class="live-url-display">
+            <span class="url-protocol">https://</span>app.safecircle.id/track/<span class="url-token" id="mapUrlToken">tk-8942</span>
+          </div>
+          <div class="stream-rate-badge">
+            <span class="pulse-green"></span> WebSocket: 3s Rate
+          </div>
+        </div>
+
+        <!-- Canvas for Live Vector Road Map & Breadcrumbs -->
+        <div class="map-viewport">
+          <canvas id="mapCanvas" width="600" height="340"></canvas>
+          <div class="map-pin-pulse" id="mapPinPulse">
+            <div class="pin-avatar">📍</div>
+            <div class="pin-tag">
+              <span class="pin-user" id="mapUserTag">Verified Citizen #8942</span>
+              <span class="pin-speed" id="mapSpeedTag">18.4 km/h</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-time Responders Telemetry Strip -->
+        <div class="telemetry-bar">
+          <div class="t-stat">
+            <span class="t-label">CURRENT LAT / LNG</span>
+            <span class="t-val" id="tLat">28.6139° N, 77.2090° E</span>
+          </div>
+          <div class="t-stat">
+            <span class="t-label">SPEED</span>
+            <span class="t-val" id="tSpeed">18.4 km/h</span>
+          </div>
+          <div class="t-stat">
+            <span class="t-label">PHONE BATTERY</span>
+            <span class="t-val" id="tBattery">94%</span>
+          </div>
+          <div class="t-stat">
+            <span class="t-label">ALERT STATUS</span>
+            <span class="t-val status-pill-active" id="tStatus">ARMED (READY)</span>
+          </div>
+        </div>
+
+        <!-- Emergency Responders Quick Dispatch Hotline -->
+        <div class="responders-hotline">
+          <button class="dispatch-call-btn call-112" onclick="alert('Simulating direct hotline bridge to Central Police Control Room (112)...')">
+            📞 Call PCR 112
+          </button>
+          <button class="dispatch-call-btn call-ambulance" onclick="alert('Simulating CATS Ambulance SOS Dispatch with live GPS token...')">
+            🚑 Dispatch Ambulance
+          </button>
+          <button class="dispatch-call-btn call-share" id="btnShareTracking">
+            🔗 Copy Live URL
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- PANEL 4: PUBLIC CIVIC ACCOUNTABILITY TALLY     -->
+    <!-- ============================================== -->
+    <section class="stage-card stage-card-civic" id="panel-civic">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="device-tag">CIVIC TRANSPARENCY</span>
+          <h2>Public Accountability Tally & Tracking</h2>
+        </div>
+        <div class="device-actions">
+          <select id="tallyCitySelect" class="city-selector">
+            <option value="Delhi NCR">Delhi NCR</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Hyderabad">Hyderabad</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="civic-portal-container">
+        <!-- 4 Core Metrics Tiles -->
+        <div class="civic-metric-tiles">
+          <div class="c-tile">
+            <span class="c-number" id="tallyTotal">1,842</span>
+            <span class="c-label">Complaints Lodged</span>
+          </div>
+          <div class="c-tile c-tile-green">
+            <span class="c-number" id="tallyResolved">1,490</span>
+            <span class="c-label">Resolved (80.9%)</span>
+          </div>
+          <div class="c-tile c-tile-amber">
+            <span class="c-number" id="tallyPending">352</span>
+            <span class="c-label">In-Progress</span>
+          </div>
+          <div class="c-tile c-tile-cyan">
+            <span class="c-number" id="tallyResponse">4.2 min</span>
+            <span class="c-label">Avg PCR Response</span>
+          </div>
+        </div>
+
+        <!-- Anonymous Citizen Complaint Tracker -->
+        <div class="complaint-tracker-box">
+          <div class="tracker-header">
+            <h4>SEARCH CASE BY REFERENCE ID</h4>
+            <span class="anon-guarantee">🛡️ Privacy Shield Maintained</span>
+          </div>
+          <div class="tracker-search-bar">
+            <input type="text" id="complaintSearchInput" value="SC-DL-2026-8942" class="tracker-input" placeholder="e.g. SC-DL-2026-8942">
+            <button class="tracker-search-btn" id="btnSearchComplaint">Search Status</button>
+          </div>
+
+          <!-- Dynamic Complaint Progress Card -->
+          <div class="complaint-progress-card" id="complaintResultCard">
+            <div class="cp-top">
+              <div>
+                <span class="cp-id">SC-DL-2026-8942</span>
+                <span class="cp-handle">Verified Citizen #8942</span>
+              </div>
+              <span class="cp-status-chip">UNDER INVESTIGATION</span>
+            </div>
+
+            <div class="cp-grid">
+              <div><strong>Jurisdiction:</strong> Hauz Khas Police Station, South Delhi</div>
+              <div><strong>Lead Officer:</strong> Sub-Inspector R. Meena</div>
+              <div><strong>Incident Type:</strong> Street Harassment (Night Transit)</div>
+              <div><strong>Evidence Attached:</strong> 2 Encrypted Blobs (Audio + Dashcam)</div>
+            </div>
+
+            <div class="cp-log">
+              <strong>Official Station Log:</strong> CCTV footage retrieved from Metro Gate 2. Accused vehicle identified; formal summons issued.
+            </div>
+
+            <!-- Milestone Progress Bar -->
+            <div class="cp-stepper">
+              <div class="step completed">
+                <span class="step-dot">✓</span>
+                <span class="step-name">Lodged</span>
+              </div>
+              <div class="step completed">
+                <span class="step-dot">✓</span>
+                <span class="step-name">Assigned</span>
+              </div>
+              <div class="step active">
+                <span class="step-dot">●</span>
+                <span class="step-name">Investigation</span>
+              </div>
+              <div class="step">
+                <span class="step-dot">○</span>
+                <span class="step-name">Charge Sheet</span>
+              </div>
+              <div class="step">
+                <span class="step-dot">○</span>
+                <span class="step-name">Resolved</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- ============================================== -->
+    <!-- PANEL 5: AI CONSTITUTIONAL LEGAL & VICTIM SHIELD -->
+    <!-- ============================================== -->
+    <section class="stage-card stage-card-ai-legal" id="panel-ai-legal">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="device-tag">AI LEGAL INTELLIGENCE & VICTIM ADVOCATE</span>
+          <h2>Constitutional Rights & Victim Protection Shield</h2>
+        </div>
+        <div class="device-actions">
+          <span class="ai-live-badge">✨ Neural Engine Active • BNS & CrPC Mapped</span>
+        </div>
+      </div>
+
+      <!-- Emergency Victim Crisis Hotline Banner -->
+      <div class="ai-urgent-crisis-bar">
+        <div class="crisis-pulse-dot"></div>
+        <div class="crisis-bar-text">
+          <strong>Immediate Victim Support Active:</strong> In distress? Our AI guides you through forensic preservation, Zero FIR rights, and free emergency medical treatment.
+        </div>
+        <div class="crisis-quick-actions">
+          <button class="crisis-pill-btn crisis-btn-112" onclick="alert('Simulating direct hotline bridge to Emergency PCR 112 with SafeCircle GPS coordinates...')">
+            📞 112 Police
+          </button>
+          <button class="crisis-pill-btn crisis-btn-1091" onclick="alert('Simulating bridge to All India Women Helpline 1091...')">
+            📞 1091 Women
+          </button>
+          <button class="crisis-pill-btn crisis-btn-181" onclick="alert('Simulating bridge to Women in Distress / Sakhi One Stop Centre 181...')">
+            📞 181 Distress
+          </button>
+          <button class="crisis-pill-btn crisis-btn-sos" id="btnAiTriggerSos">
+            🚨 Trigger Live SOS
+          </button>
+        </div>
+      </div>
+
+      <!-- Dual Column Layout for AI Panel -->
+      <div class="ai-shield-layout">
+
+        <!-- Column 1: Interactive AI Clarifier & Victim Chat -->
+        <div class="ai-chat-column">
+          <div class="chat-column-header">
+            <div class="ai-avatar-box">
+              <span class="ai-avatar-icon">⚖️</span>
+              <div>
+                <span class="ai-name">SafeCircle Legal & Victim AI</span>
+                <span class="ai-sub">Constitutional Articles, BNS 2023 & Trauma-Informed Triage</span>
+              </div>
+            </div>
+            <button class="chat-clear-btn" id="btnClearChat" title="Reset Conversation">Clear</button>
+          </div>
+
+          <!-- Quick Suggestion Prompts -->
+          <div class="quick-suggestion-container">
+            <span class="qs-label">FAST LEGAL PROMPTS:</span>
+            <div class="qs-scroll-row">
+              <button class="qs-chip urgent" data-prompt="I need immediate help — I was assaulted">🆘 I Need Help Now (Assaulted)</button>
+              <button class="qs-chip" data-prompt="What does Article 21 say about bodily dignity & two-finger test?">🏛️ Article 21 & Two-Finger Test Ban</button>
+              <button class="qs-chip" data-prompt="What is the penalty for rape under BNS 64 vs IPC 376?">⚖️ BNS 64 vs IPC 376 Rape Penalties</button>
+              <button class="qs-chip" data-prompt="Can police refuse to file my Zero FIR?">🚔 Zero FIR & Police Punishment (Sec 166A)</button>
+              <button class="qs-chip" data-prompt="What are my rights during medical examination under Sec 164A?">🏥 Medical Exam Rights (Sec 164A / 357C)</button>
+              <button class="qs-chip" data-prompt="How do I get free legal aid under Article 39A?">🤝 Free Legal Aid (Article 39A & NALSA 15100)</button>
+            </div>
+          </div>
+
+          <!-- Live Conversation Message Stream -->
+          <div class="ai-conversation-stream" id="aiConversationStream">
+            <!-- Initial AI Intro Message -->
+            <div class="chat-msg msg-ai">
+              <div class="msg-meta">
+                <span class="msg-sender">SAFECIRCLE AI LEGAL ADVOCATE</span>
+                <span class="msg-time">Just now</span>
+              </div>
+              <div class="msg-content">
+                <p><strong>Namaste. I am your SafeCircle AI Legal & Victim Shield.</strong></p>
+                <p>I provide authoritative, legally grounded clarification on:</p>
+                <ul>
+                  <li><strong>The Constitution of India</strong> (Article 21 Bodily Dignity, Article 14 Equality, Article 15(3) Affirmative Women Protection, Article 39A Free Legal Aid, Articles 32 & 226 Writs against Police Inaction).</li>
+                  <li><strong>Anti-Rape & Criminal Code</strong> (IPC 375/376 and Bharatiya Nyaya Sanhita - BNS Section 64, Gang Rape BNS 70, False Promise to Marry BNS 69, Stalking BNS 78, Identity Concealment BNS 72).</li>
+                  <li><strong>Zero FIR & Police Accountability</strong> (Section 154 CrPC / Section 173 BNSS; criminal prosecution of refusing police under Section 166A IPC / Section 199 BNS).</li>
+                  <li><strong>Immediate Victim Crisis Assistance</strong>: Step-by-step forensic evidence preservation, free hospital care under Section 357C, prohibition of the two-finger test, and free DLSA legal counsel.</li>
+                </ul>
+                <p><em>If you are in immediate danger or have experienced assault, tap below or type your question. I am here to help you.</em></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Input Field -->
+          <div class="ai-input-wrapper">
+            <div class="ai-input-box">
+              <input type="text" id="aiLegalQueryInput" class="ai-query-input" placeholder="Ask on Constitution, Rape laws, Zero FIR, or type 'help me'..." autocomplete="off">
+              <button class="ai-voice-sim-btn" id="btnSimulateVoice" title="Simulate Voice Prompt">🎙️</button>
+              <button class="ai-send-btn" id="btnSendAiQuery" title="Send Legal Query">
+                <span>Send</span> ➤
+              </button>
+            </div>
+            <div class="input-disclaimer">
+              SafeCircle Legal AI cross-references Indian Constitution, IPC, BNS 2023, CrPC, BNSS 2023, and landmark Supreme Court rulings. In physical emergencies, call 112 immediately.
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2: Legal Knowledge Explorer & Step-by-Step Victim Triage -->
+        <div class="ai-knowledge-column">
+          <div class="knowledge-tabs-bar" id="knowledgeTabsBar">
+            <button class="k-tab active" data-ktab="victim-checklist">🆘 Victim Action Checklist</button>
+            <button class="k-tab" data-ktab="constitution-guide">📜 Constitution</button>
+            <button class="k-tab" data-ktab="criminal-code">⚖️ BNS / IPC Code</button>
+            <button class="k-tab" data-ktab="helpline-directory">📞 Helplines</button>
+          </div>
+
+          <!-- TAB CONTENT 1: Immediate Victim Checklist -->
+          <div class="k-tab-pane active" id="pane-victim-checklist">
+            <div class="checklist-hero-badge">
+              <span>CRITICAL SURVIVOR PROTOCOL</span>
+              <strong>Step-by-Step Immediate Protection</strong>
+            </div>
+
+            <div class="victim-checklist-steps">
+              <div class="v-step-card">
+                <div class="v-step-num">1</div>
+                <div class="v-step-info">
+                  <h4>Reach Immediate Physical Safety</h4>
+                  <p>Move away from the perpetrator into a public area, shop, bank ATM, hospital, or trusted shelter. Lock doors and dial 112 if pursued.</p>
+                </div>
+              </div>
+
+              <div class="v-step-card urgent-card">
+                <div class="v-step-num urgent">2</div>
+                <div class="v-step-info">
+                  <h4>Preserve Forensic DNA Evidence (Golden Hours)</h4>
+                  <p><strong>Do NOT wash, shower, brush teeth, or change clothes yet.</strong> If clothes must be removed, place each garment separately in clean dry <strong>PAPER bags</strong> (plastic degrades DNA). Forensic swabs under Sec 164A CrPC / Sec 184 BNSS are vital for trial.</p>
+                </div>
+              </div>
+
+              <div class="v-step-card">
+                <div class="v-step-num">3</div>
+                <div class="v-step-info">
+                  <h4>Free Emergency Medical Care (Section 357C CrPC)</h4>
+                  <p><strong>ALL hospitals (private and government) must provide 100% free treatment.</strong> Private hospitals cannot demand fees or turn you away. Demand HIV Post-Exposure Prophylaxis (PEP within 72 hrs) and emergency contraception.</p>
+                </div>
+              </div>
+
+              <div class="v-step-card">
+                <div class="v-step-num">4</div>
+                <div class="v-step-info">
+                  <h4>Firm Refusal of Two-Finger Test</h4>
+                  <p>The Supreme Court in <em>Lillu (2013)</em> and <em>State of Jharkhand (2022)</em> declared the two-finger test unconstitutional and illegal under Article 21. Any doctor conducting it faces disciplinary suspension. Firmly decline.</p>
+                </div>
+              </div>
+
+              <div class="v-step-card">
+                <div class="v-step-num">5</div>
+                <div class="v-step-info">
+                  <h4>Lodge a Zero FIR (Section 154 CrPC / Section 173 BNSS)</h4>
+                  <p>Lodge an FIR at ANY police station in India without boundary disputes. If an officer hesitates, cite <strong>Section 166A IPC / Section 199 BNS</strong> (jail up to 2 years for refusing). Demand a free signed copy of the FIR on the spot.</p>
+                </div>
+              </div>
+
+              <div class="v-step-card">
+                <div class="v-step-num">6</div>
+                <div class="v-step-info">
+                  <h4>Appoint Free Legal Aid Advocate (Article 39A)</h4>
+                  <p>Call NALSA helpline <strong>15100</strong>. You are entitled to a free, qualified advocate from the District Legal Services Authority (DLSA) to handle police bail opposition, trial representation, and Nirbhaya compensation.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT 2: Constitutional Guarantees -->
+          <div class="k-tab-pane" id="pane-constitution-guide">
+            <div class="legal-accordion-list">
+              <div class="legal-card-item">
+                <div class="lc-head">
+                  <span class="lc-tag const">CONSTITUTION</span>
+                  <h4>Article 21: Right to Life, Bodily Autonomy & Dignity</h4>
+                </div>
+                <p>The Supreme Court in <em>Justice K.S. Puttaswamy (2017)</em> and <em>Vishaka (1997)</em> ruled that bodily integrity, sexual autonomy, privacy, and freedom from sexual assault are sovereign fundamental rights under Article 21.</p>
+                <div class="lc-rights">
+                  <span>✓ Absolute physical autonomy</span>
+                  <span>✓ Right to free medical aid (Parmanand Katara)</span>
+                  <span>✓ Strict ban on two-finger test</span>
+                </div>
+              </div>
+
+              <div class="legal-card-item">
+                <div class="lc-head">
+                  <span class="lc-tag const">CONSTITUTION</span>
+                  <h4>Article 14 & Article 15(3): Equality & Special Women Safeguards</h4>
+                </div>
+                <p>Article 14 prohibits gender bias in policing. Article 15(3) empowers Parliament to enact affirmative protective laws exclusively for women (e.g. Nirbhaya Fund, One Stop Sakhi Centres, POSH Act 2013, PWDVA 2005).</p>
+                <div class="lc-rights">
+                  <span>✓ Non-discriminatory police inquiry</span>
+                  <span>✓ Women-dedicated helplines</span>
+                  <span>✓ Fast-track special courts</span>
+                </div>
+              </div>
+
+              <div class="legal-card-item">
+                <div class="lc-head">
+                  <span class="lc-tag const">CONSTITUTION</span>
+                  <h4>Article 39A: Equal Justice & Free Legal Aid</h4>
+                </div>
+                <p>Guarantees free, competent legal aid so that justice is never denied due to financial hardship. Operates through Legal Services Authorities Act, 1987 (NALSA / DLSA / SLSA).</p>
+                <div class="lc-rights">
+                  <span>✓ Free court-appointed lawyer</span>
+                  <span>✓ Support in opposing bail of accused</span>
+                  <span>✓ Assistance in filing interim compensation</span>
+                </div>
+              </div>
+
+              <div class="legal-card-item">
+                <div class="lc-head">
+                  <span class="lc-tag const">CONSTITUTION</span>
+                  <h4>Article 32 & Article 226: Writs for Police Inaction</h4>
+                </div>
+                <p>Allows survivors to file direct Writ Petitions before the Supreme Court (Art 32) or High Court (Art 226). In cases of police non-compliance or corruption, the court can issue a Writ of Mandamus or transfer inquiry to SIT/CBI.</p>
+                <div class="lc-rights">
+                  <span>✓ High Court intervention against corrupt police</span>
+                  <span>✓ Court-monitored investigation</span>
+                  <span>✓ Constitutional damages (Nilabati Behera)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT 3: BNS & IPC Criminal Code -->
+          <div class="k-tab-pane" id="pane-criminal-code">
+            <div class="legal-accordion-list">
+              <div class="legal-card-item">
+                <div class="lc-head">
+                  <span class="lc-tag penal">PENAL CODE</span>
+                  <h4>Section 64 BNS (2023) / Section 376 IPC: Rape</h4>
+                </div>
+                <p>Penalizes rape without consent. Consent requires unequivocal voluntary agreement; submission under threat or intoxication is not consent. <strong>Punishment:</strong> Rigorous imprisonment not less than 10 years, up to life imprisonment and fine.</p>
+              </div>
+
+              <div class="legal-card-item">
+                <div class="lc-head">
+                  <span class="lc-tag penal">PENAL CODE</span>
+                  <h4>Section 70 BNS (2023) / Section 376D IPC: Gang Rape</h4>
+                </div>
+                <p>Committed by one or more persons acting in furtherance of common intention. <strong>Punishment:</strong> Rigorous imprisonment not less than 20 years, extendable to imprisonment for remainder of natural life or death.</p>
+              </div>
+
+              <div class="legal-card-item">
+                <div class="lc-head">
+                  <span class="lc-tag penal">NEW BNS 2023</span>
+                  <h4>Section 69 BNS: Deceitful Promise of Marriage</h4>
+                </div>
+                <p>Explicitly penalizes anyone who has sexual intercourse by deceitful means (including false promise of employment or promotion, or marrying after concealing identity). <strong>Punishment:</strong> Imprisonment up to 10 years and fine.</p>
+              </div>
+
+              <div class="legal-card-item">
+                <div class="lc-head">
+                  <span class="lc-tag procedure">CRIMINAL PROCEDURE</span>
+                  <h4>Section 173 BNSS / Section 154 CrPC: Mandatory Zero FIR</h4>
+                </div>
+                <p>Registration of FIR is mandatory for cognizable sexual offences (<em>Lalita Kumari SC ruling</em>). Police cannot cite lack of territorial jurisdiction. Refusing officers face up to 2 years in prison under Section 199 BNS / Section 166A IPC.</p>
+              </div>
+
+              <div class="legal-card-item">
+                <div class="lc-head">
+                  <span class="lc-tag penal">PRIVACY</span>
+                  <h4>Section 72 BNS (2023) / Section 228A IPC: Non-Disclosure of Identity</h4>
+                </div>
+                <p>Publishing the name, picture, or identifying details of a sexual assault survivor in media, press, or social media is a criminal offence punishable by up to 2 years imprisonment.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT 4: Emergency Helplines Directory -->
+          <div class="k-tab-pane" id="pane-helpline-directory">
+            <div class="helpline-cards-grid">
+              <div class="h-card">
+                <div class="h-top">
+                  <span class="h-badge police">POLICE EMERGENCY</span>
+                  <span class="h-hours">24/7 Toll-Free</span>
+                </div>
+                <h3 class="h-num">112</h3>
+                <span class="h-title">National Emergency Response System (ERSS)</span>
+                <p>Universal distress helpline for immediate police patrol dispatch, ambulance, and live GPS response.</p>
+                <button class="h-dial-btn" onclick="alert('Dialing 112 National Police Emergency...')">📞 Dial 112</button>
+              </div>
+
+              <div class="h-card">
+                <div class="h-top">
+                  <span class="h-badge women">WOMEN HELPLINE</span>
+                  <span class="h-hours">24/7 Toll-Free</span>
+                </div>
+                <h3 class="h-num">1091</h3>
+                <span class="h-title">All India Women Safety Control Room</span>
+                <p>Dedicated women safety police control room for stalking, harassment, emergency rescue, and FIR intervention.</p>
+                <button class="h-dial-btn" onclick="alert('Dialing 1091 All India Women Helpline...')">📞 Dial 1091</button>
+              </div>
+
+              <div class="h-card">
+                <div class="h-top">
+                  <span class="h-badge distress">CRISIS & SHELTER</span>
+                  <span class="h-hours">24/7 Toll-Free</span>
+                </div>
+                <h3 class="h-num">181</h3>
+                <span class="h-title">Women in Distress / Sakhi One-Stop Centres</span>
+                <p>Government integrated emergency care: medical treatment, temporary shelter, psycho-social counseling, and legal assistance.</p>
+                <button class="h-dial-btn" onclick="alert('Dialing 181 Women in Distress Helpline...')">📞 Dial 181</button>
+              </div>
+
+              <div class="h-card">
+                <div class="h-top">
+                  <span class="h-badge legal">LEGAL AID</span>
+                  <span class="h-hours">24/7 Toll-Free</span>
+                </div>
+                <h3 class="h-num">15100</h3>
+                <span class="h-title">NALSA Free Legal Aid Helpline</span>
+                <p>Constitutional legal aid under Article 39A. Assigns a free DLSA advocate for FIR filing, opposing bail, and court representation.</p>
+                <button class="h-dial-btn" onclick="alert('Dialing 15100 NALSA Free Legal Aid...')">⚖️ Dial 15100</button>
+              </div>
+
+              <div class="h-card">
+                <div class="h-top">
+                  <span class="h-badge cyber">CYBER CRIME</span>
+                  <span class="h-hours">24/7 Toll-Free</span>
+                </div>
+                <h3 class="h-num">1930</h3>
+                <span class="h-title">National Cyber Crime Reporting Helpline</span>
+                <p>Reporting cyberstalking, non-consensual image sharing, deepfakes, and online harassment (cybercrime.gov.in).</p>
+                <button class="h-dial-btn" onclick="alert('Dialing 1930 National Cyber Crime Reporting...')">💻 Dial 1930</button>
+              </div>
+
+              <div class="h-card">
+                <div class="h-top">
+                  <span class="h-badge child">MINOR / POCSO</span>
+                  <span class="h-hours">24/7 Toll-Free</span>
+                </div>
+                <h3 class="h-num">1098</h3>
+                <span class="h-title">Childline (Under 18 Victims)</span>
+                <p>Emergency assistance for child abuse, minor sexual assault under POCSO Act 2012, and safe custody shelter.</p>
+                <button class="h-dial-btn" onclick="alert('Dialing 1098 Childline...')">👶 Dial 1098</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
